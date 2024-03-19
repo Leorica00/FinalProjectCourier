@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_receive_message"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="13dp"
+    android:layout_marginStart="15dp"
+    android:maxWidth="300dp"
+    android:background="@drawable/grey_background"
+    android:text="This is receive message"
+    android:fontFamily="@font/bentonsansbook"
+    android:textColor="@color/black"
+    android:textSize="14sp" />

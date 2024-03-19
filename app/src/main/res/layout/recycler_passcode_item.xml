@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatEditText xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="43dp"
+    android:layout_height="48dp"
+    android:textSize="24sp"
+    android:gravity="center"
+    android:id="@+id/etPasscode"
+    android:inputType="numberDecimal"
+    android:layout_margin="3dp"
+    android:background="@drawable/passcode_background">
+
+</androidx.appcompat.widget.AppCompatEditText>

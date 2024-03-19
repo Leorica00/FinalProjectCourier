@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="roundedImageViewRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="circleImageViewRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="CustomBottomNavigationStyle" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="itemActiveIndicatorStyle">@style/CustomBottomNavigationActiveIndicator</item>
+    </style>
+
+    <style name="CustomBottomNavigationActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:width">70dp</item>
+        <item name="android:height">30dp</item>
+        <item name="marginHorizontal">4dp</item>
+        <item name="android:shape">oval</item>
+        <item name="shapeAppearanceOverlay">@style/circleImageViewRounded</item>
+        <item name="android:color">@color/light_green</item>
+        <item name="android:popupBackground">@drawable/circle_background</item>
+    </style>
+
+    <style name="CustomSpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:dropDownSelector">@style/CustomArrowStyle</item>
+    </style>
+
+    <style name="CustomArrowStyle" parent="Widget.AppCompat.Spinner.DropDown">
+        <item name="android:tint">@color/green</item>
+        <item name="android:dropDownSelector">@drawable/ic_dropdown_arrow</item>
+    </style>
+
+    <declare-styleable name="CustomEditText">
+        <attr name="edit_text_selector" format="reference" />
+    </declare-styleable>
+
+    <style name="CustomTextInputLayout" >
+        <item name="edit_text_selector">@drawable/edit_text_selector</item>
+    </style>
+</resources>

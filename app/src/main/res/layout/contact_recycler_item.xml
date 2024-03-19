@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@drawable/edit_text_background"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginVertical="10dp"
+    android:layout_height="81dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/shapeableImageViewCover"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="8dp"
+        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+        android:src="@drawable/ic_password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/bentonsansregular"
+        android:text="Anamwp"
+        android:textColor="?android:textColor"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/shapeableImageViewCover"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvLastMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Order Just Arrived!"
+        android:textColor="@color/grey"
+        android:textSize="14sp"
+        android:lines="1"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@+id/shapeableImageViewCover"
+        app:layout_constraintTop_toBottomOf="@+id/tvFullName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

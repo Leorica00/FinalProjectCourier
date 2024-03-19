@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.FinalProjectCourier" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/very_light_grey</item>
+        <item name="android:windowBackground">@color/dark_mode_background</item>
+        <item name="color">@color/dark_grey</item>
+        <item name="colorContainer">@color/dark_grey</item>
+        <item name="colorSecondary">@color/white</item>
+        <item name="strokeColor">@color/grey</item>
+    </style>
+</resources>
