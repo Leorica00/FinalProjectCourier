@@ -13,7 +13,7 @@ import com.example.final_project.data.repository.remote.firebase.FirebaseEmailLo
 import com.example.final_project.data.repository.remote.firebase.FirebasePhotosRepositoryImpl
 import com.example.final_project.data.repository.remote.firebase.FirebaseSignOutRepositoryImpl
 import com.example.final_project.data.repository.remote.firebase.FirebaseUserDataRepositoryImpl
-import com.example.final_project.data.repository.remote.route.DirectionsRepositoryImpl
+import com.example.finalprojectcourier.data.repository.remote.route.DirectionsRepositoryImpl
 import com.example.final_project.di.DispatchersModule.IoDispatcher
 import com.example.final_project.domain.repository.auth.FirebaseAdditionalUserDataRepository
 import com.example.final_project.domain.repository.auth.FirebaseAuthStateRepository
@@ -28,6 +28,8 @@ import com.example.final_project.domain.repository.firebase.FirebaseUserDataRepo
 import com.example.final_project.domain.repository.route.DirectionsRepository
 import com.example.finalprojectcourier.data.local.datasource.ChatBotAuthTokenDataSource
 import com.example.finalprojectcourier.data.repository.remote.chatbot.ChatBotRepositoryImpl
+import com.example.finalprojectcourier.data.repository.remote.order.OrderRepositoryImpl
+import com.example.finalprojectcourier.domain.repository.order.OrderRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.FirebaseStorage
@@ -41,6 +43,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
+
+    @Provides
+    @Singleton
+    fun provideOrderRepository(databaseReference: DatabaseReference): OrderRepository = OrderRepositoryImpl(databaseReference)
 
     @Provides
     @Singleton

@@ -75,8 +75,8 @@ class DeliveryService : Service() {
         )
 
         val navigationIntent = NavDeepLinkBuilder(this)
-            .setGraph(R.navigation.nav_graph) // Replace with your navigation graph resource ID
-            .setDestination(R.id.courierDeliveryMapFragment) // Replace with your fragment ID
+            .setGraph(R.navigation.nested_home_nav_graph)
+            .setDestination(R.id.courierDeliveryMapFragment)
             .createPendingIntent()
 
         val notificationBuilder = NotificationCompat.Builder(this, notificationChannelId)

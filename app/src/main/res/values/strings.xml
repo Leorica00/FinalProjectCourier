@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Final-Project</string>
+    <string name="app_name">Final-Project-Courier</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="find_your_comfort_food_here">Find your Comfort Food here</string>
     <string name="here_you_can_find_a_chef_or_dish_for_every_taste_and_color_enjoy">Here You Can find a chef or dish for every taste and color. Enjoy!</string>
@@ -114,4 +114,6 @@
     <string name="add_to_order">Add to order</string>
     <string name="_1">1</string>
     <string name="loading">loading…</string>
+    <string name="start_working">Start Working</string>
+    <string name="looking_for_an_order">Looking For an order</string>
 </resources>

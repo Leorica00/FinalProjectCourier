@@ -1,3 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/nested_home_nav_graph" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nested_home_nav_graph"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/courierDeliveryMapFragment"
+        android:name="com.example.finalprojectcourier.presentation.screen.delivery_map.CourierDeliveryMapFragment"
+        android:label="fragment_courier_delivery_map"
+        tools:layout="@layout/fragment_courier_delivery_map" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.finalprojectcourier.presentation.screen.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_courierDeliveryMapFragment"
+            app:destination="@id/courierDeliveryMapFragment" />
+    </fragment>
+</navigation>
