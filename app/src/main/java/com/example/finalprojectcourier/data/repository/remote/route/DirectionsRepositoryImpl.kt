@@ -1,4 +1,4 @@
-package com.example.final_project.data.repository.remote.route
+package com.example.finalprojectcourier.data.repository.remote.route
 
 import com.example.final_project.data.remote.common.HandleErrorStates
 import com.example.final_project.data.remote.common.Resource

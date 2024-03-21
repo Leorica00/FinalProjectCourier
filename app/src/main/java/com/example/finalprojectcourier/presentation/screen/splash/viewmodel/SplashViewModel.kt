@@ -47,7 +47,7 @@ class SplashViewModel @Inject constructor(
 
     private fun readSession() {
         viewModelScope.launch {
-            updateAuthTokenUseCase()
+//            updateAuthTokenUseCase()
             getAuthStateUseCase().collect {
                 if (it)
                     _uiEvent.emit(SplashNavigationEvents.NavigateToHome)

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/placeholderDestination">
 
     <action android:id="@+id/action_global_to_welcomeFragment"
         app:destination="@id/placeholderAuthentication"
@@ -14,9 +14,6 @@
         app:destination="@id/placeholderDestination"
         app:popUpTo="@id/nav_graph"
         app:popUpToInclusive="true"/>
-
-    <action android:id="@+id/action_global_to_courierDeliveryFragment"
-        app:destination="@+id/courierDeliveryMapFragment"/>
 
     <fragment
         android:id="@+id/splashFragment"
@@ -35,14 +32,9 @@
 
     <fragment
         android:id="@+id/placeholderDestination"
-        android:name="com.example.final_project.presentation.screen.home_container.fragment.HomeContainerFragment"
+        android:name="com.example.finalprojectcourier.presentation.screen.home_container.fragment.HomeContainerFragment"
         android:label="Placeholder"
         tools:layout="@layout/fragment_home_container"/>
-    <fragment
-        android:id="@+id/courierDeliveryMapFragment"
-        android:name="com.example.finalprojectcourier.presentation.screen.delivery_map.CourierDeliveryMapFragment"
-        android:label="fragment_courier_delivery_map"
-        tools:layout="@layout/fragment_courier_delivery_map" />
     <fragment android:id="@+id/placeholderAuthentication"
         android:label="auth_placeholder"
         tools:layout="@layout/fragment_authentification_container"
