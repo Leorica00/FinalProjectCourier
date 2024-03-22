@@ -15,6 +15,7 @@
         tools:context=".presentation.screen.delivery_map.CourierDeliveryMapFragment" />
 
     <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="50dp"
@@ -23,6 +24,7 @@
         android:layout_gravity="center"/>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvLookingForOrder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/looking_for_an_order"

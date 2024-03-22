@@ -3,8 +3,11 @@ package com.example.finalprojectcourier.presentation.screen.delivery_map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.final_project.data.remote.common.Resource
+import com.example.final_project.presentation.mapper.chat.toDomain
+import com.example.final_project.presentation.model.chat.Contact
 import com.example.finalprojectcourier.domain.usecase.route.GetDirectionUseCase
 import com.example.final_project.presentation.state.CourierDeliveryState
+import com.example.finalprojectcourier.domain.usecase.chat.AddContactUseCase
 import com.example.finalprojectcourier.domain.usecase.order.GetOrderUseCase
 import com.example.finalprojectcourier.presentation.mapper.order.toPresentation
 import com.example.finalprojectcourier.presentation.mapper.toPresentation
@@ -24,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CourierDeliveryMapViewModel @Inject constructor(
     private val getDirectionUseCase: GetDirectionUseCase,
-    private val getOrderUseCase: GetOrderUseCase
+    private val getOrderUseCase: GetOrderUseCase,
+    private val addContactUseCase: AddContactUseCase
 ) : ViewModel() {
     private val _directionsStateFlow = MutableStateFlow(CourierDeliveryState())
     val directionStateFlow = _directionsStateFlow.asStateFlow()
@@ -66,7 +70,11 @@ class CourierDeliveryMapViewModel @Inject constructor(
                     }
 
                     _directionsStateFlow.value.order?.let {
-                        getDirection(origin = it.location!!.location, LatLng(location["latitude"]!!, location["longitude"]!!))
+                        viewModelScope.launch {
+                            getDirection(origin = it.location!!.location, LatLng(location["latitude"]!!, location["longitude"]!!))
+                            val contact = Contact(imageUrl = "", lastMessage = "", receiverId = it.userUuid, fullName = "user")
+                            addContactUseCase(contact.toDomain())
+                        }
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {}

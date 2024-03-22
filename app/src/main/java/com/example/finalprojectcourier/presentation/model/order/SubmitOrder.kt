@@ -2,7 +2,7 @@ package com.example.finalprojectcourier.presentation.model.order
 
 data class SubmitOrder(
     val userUuid: String?,
-    val isActive: Boolean?,
+    val isActive: Boolean? = false,
     val location: DeliveryLocation?,
     val menu: List<Order>?,
     val totalPrice: Double?

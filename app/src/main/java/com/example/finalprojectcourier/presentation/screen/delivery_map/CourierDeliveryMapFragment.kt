@@ -2,7 +2,6 @@ package com.example.finalprojectcourier.presentation.screen.delivery_map
 
 import android.content.Intent
 import android.graphics.Color
-import android.util.Log.d
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -55,7 +54,6 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.directionStateFlow.collect {
-                    d("currentStateBroWtf", it.toString())
                     it.direction?.let {
                         val path = PolyUtil.decode(it.routes[0].overview_polyline.points)
                         val polylineOptions = PolylineOptions()
@@ -68,7 +66,11 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
                     }
                     it.order?.let {
                         with(binding) {
-                            map.isVisible = it.isActive ?: false
+                            it.isActive?.let { active ->
+                                map.isVisible = active
+                                progressBar.isVisible = !active
+                                tvLookingForOrder.isVisible = !active
+                            }
                         }
                     }
                 }
