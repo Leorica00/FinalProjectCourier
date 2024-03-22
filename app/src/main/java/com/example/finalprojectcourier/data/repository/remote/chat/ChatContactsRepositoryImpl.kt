@@ -52,16 +52,13 @@ class ChatContactsRepositoryImpl @Inject constructor(auth: FirebaseAuth, private
 
     override suspend fun addContact(contact: GetContact) {
         currentUser?.let {user ->
-            val contactId = databaseReference.child("contacts").child(user.uid).push().key
-            contactId?.let {
-                val contactRef = databaseReference.child("contacts").child(user.uid).child(it)
-                val receiverRef = databaseReference.child("contacts").child(contact.receiverId!!).child(it)
+            val contactRef = databaseReference.child("contacts").child(user.uid).child(contact.receiverId!!)
+            val receiverRef = databaseReference.child("contacts").child(contact.receiverId).child(user.uid)
 
-                contactRef.setValue(contact.toData())
-                    .addOnSuccessListener {
-                        receiverRef.setValue(ContactDto(null, null, user.uid, user.displayName))
-                    }
-            }
+            contactRef.setValue(contact.toData())
+                .addOnSuccessListener {
+                    receiverRef.setValue(ContactDto(null, null, user.uid, user.displayName))
+                }
         }
     }
 }
