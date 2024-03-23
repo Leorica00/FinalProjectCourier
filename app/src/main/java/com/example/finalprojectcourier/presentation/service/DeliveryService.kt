@@ -101,8 +101,8 @@ class DeliveryService : Service() {
         if (locationPermissionGranted) {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                10000, // Update every 10 seconds
-                0f, // Minimum distance change in meters
+                10000,
+                0f,
                 locationListener
             )
         } else {

@@ -2,6 +2,7 @@ package com.example.finalprojectcourier.presentation.screen.delivery_map
 
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log.d
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -10,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.finalprojectcourier.presentation.base.BaseFragment
 import com.example.finalprojectcourier.presentation.service.DeliveryService
 import com.example.finalprojectcourier.databinding.FragmentCourierDeliveryMapBinding
+import com.example.finalprojectcourier.presentation.state.CourierDeliveryState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -42,36 +44,41 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
         val deliveryId = "your_delivery_id"
         val serviceIntent = Intent(requireActivity(), DeliveryService::class.java)
         serviceIntent.putExtra("deliveryId", deliveryId)
-
         requireActivity().startForegroundService(serviceIntent)
         viewModel.getMenuUpdate()
     }
 
-        override fun setUpListeners() {
-    }
+    override fun setUpListeners() {}
 
     override fun setUpObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.directionStateFlow.collect {
-                    it.direction?.let {
-                        val path = PolyUtil.decode(it.routes[0].overview_polyline.points)
-                        val polylineOptions = PolylineOptions()
-                            .width(10f)
-                            .color(Color.RED)
-                            .addAll(path)
+                    handleState(it)
+                }
+            }
+        }
+    }
 
-                        mMap?.clear()
-                        mMap?.addPolyline(polylineOptions)
-                    }
-                    it.order?.let {
-                        with(binding) {
-                            it.isActive?.let { active ->
-                                map.isVisible = active
-                                progressBar.isVisible = !active
-                                tvLookingForOrder.isVisible = !active
-                            }
-                        }
+    private fun handleState(state: CourierDeliveryState) {
+        state.direction?.let {
+            val path = PolyUtil.decode(it.routes[0].overview_polyline.points)
+            val polylineOptions = PolylineOptions()
+                .width(10f)
+                .color(Color.RED)
+                .addAll(path)
+
+            mMap?.clear()
+            mMap?.addPolyline(polylineOptions)
+        }
+        state.order?.let {
+            with(binding) {
+                it.isActive?.let { active ->
+                    d("currentStateOfMap", state.toString())
+                    state.direction?.let {direction->
+                        map.isVisible = active
+                        progressBar.isVisible = !active
+                        tvLookingForOrder.isVisible = !active
                     }
                 }
             }
