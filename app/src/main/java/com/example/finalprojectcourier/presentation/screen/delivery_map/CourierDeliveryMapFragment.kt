@@ -2,15 +2,16 @@ package com.example.finalprojectcourier.presentation.screen.delivery_map
 
 import android.content.Intent
 import android.graphics.Color
-import android.util.Log.d
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.finalprojectcourier.presentation.base.BaseFragment
 import com.example.finalprojectcourier.presentation.service.DeliveryService
 import com.example.finalprojectcourier.databinding.FragmentCourierDeliveryMapBinding
+import com.example.finalprojectcourier.presentation.event.delivery.CourierDeliveryMapEvent
 import com.example.finalprojectcourier.presentation.state.CourierDeliveryState
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -45,10 +46,17 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
         val serviceIntent = Intent(requireActivity(), DeliveryService::class.java)
         serviceIntent.putExtra("deliveryId", deliveryId)
         requireActivity().startForegroundService(serviceIntent)
-        viewModel.getMenuUpdate()
+        viewModel.onEvent(CourierDeliveryMapEvent.GetMenuUpdateEvent)
     }
 
-    override fun setUpListeners() {}
+    override fun setUpListeners() {
+        binding.btnOrderDelivered.setOnClickListener {
+            val deliveryService = Intent(context, DeliveryService::class.java)
+            requireActivity().stopService(deliveryService)
+            viewModel.onEvent(CourierDeliveryMapEvent.UpdateCourierLocationEvent)
+            findNavController().navigateUp()
+        }
+    }
 
     override fun setUpObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -71,17 +79,23 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
             mMap?.clear()
             mMap?.addPolyline(polylineOptions)
         }
+
         state.order?.let {
             with(binding) {
                 it.isActive?.let { active ->
-                    d("currentStateOfMap", state.toString())
-                    state.direction?.let {direction->
+                    state.direction?.let {
                         map.isVisible = active
                         progressBar.isVisible = !active
                         tvLookingForOrder.isVisible = !active
+                        tvDistanceLeft.isVisible = active
                     }
                 }
             }
+        }
+
+        state.distance?.let {
+            binding.tvDistanceLeft.text = "Distance left - ".plus(it.distance)
+            binding.btnOrderDelivered.isVisible = it.distanceValue < 50
         }
     }
 

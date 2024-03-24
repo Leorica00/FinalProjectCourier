@@ -8,6 +8,4 @@ data class GetSubmitOrder(
     val location: GetDeliveryLocation?,
     val menu: List<GetOrder>?,
     val totalPrice: Double?
-){
-    constructor() : this(null, null, null, null, null)
-}
+)
