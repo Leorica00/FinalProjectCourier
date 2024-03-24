@@ -29,10 +29,10 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
     private val viewModel: CourierDeliveryMapViewModel by viewModels()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var mMap: GoogleMap? = null
+    private var refreshCount = 0
 
     private val callback = OnMapReadyCallback { googleMap ->
         mMap = googleMap
-        updateLocationUi(LatLng(41.7934135, 44.8025545))
     }
 
     override fun setUp() {
@@ -98,6 +98,11 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
 
         state.order?.let {
             with(binding) {
+                if (refreshCount < 1) {
+                    updateLocationUi(it.location!!.location)
+                    refreshCount++
+                }
+
                 it.isActive?.let { active ->
                     state.direction?.let {
                         map.isVisible = active
