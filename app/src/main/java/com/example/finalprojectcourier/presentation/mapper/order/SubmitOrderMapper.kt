@@ -8,5 +8,6 @@ fun GetSubmitOrder.toPresentation() = SubmitOrder(
     location = location?.toPresentation(),
     menu = menu?.map { it.toPresentation() },
     totalPrice = totalPrice,
-    userUuid = userUuid
+    userUuid = userUuid,
+    fullName = fullName
 )

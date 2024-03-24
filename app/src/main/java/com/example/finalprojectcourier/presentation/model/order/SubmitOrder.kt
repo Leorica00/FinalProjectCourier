@@ -5,7 +5,8 @@ data class SubmitOrder(
     val isActive: Boolean? = false,
     val location: DeliveryLocation?,
     val menu: List<Order>?,
-    val totalPrice: Double?
+    val totalPrice: Double?,
+    val fullName: String?
 ){
-    constructor() : this(null, null, null, null, null)
+    constructor() : this(null, null, null, null, null, null)
 }

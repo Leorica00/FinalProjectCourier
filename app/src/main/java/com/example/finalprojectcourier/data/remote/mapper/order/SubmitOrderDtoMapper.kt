@@ -8,7 +8,8 @@ fun GetSubmitOrder.toData() = SubmitOrderDto(
     location = location?.toDto(),
     totalPrice = totalPrice,
     menu = menu?.map { it.toDto() },
-    userUuid = userUuid
+    userUuid = userUuid,
+    fullName = fullName
 )
 
 fun SubmitOrderDto.toDomain() = GetSubmitOrder(
@@ -16,5 +17,6 @@ fun SubmitOrderDto.toDomain() = GetSubmitOrder(
     location = location?.toDomain(),
     totalPrice = totalPrice,
     menu = menu?.map { it.toDomain() },
-    userUuid = userUuid
+    userUuid = userUuid,
+    fullName = fullName
 )
