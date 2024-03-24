@@ -54,6 +54,10 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
             viewModel.onEvent(CourierDeliveryMapEvent.UpdateCourierLocationEvent)
             findNavController().navigateUp()
         }
+
+        binding.fabChat.setOnClickListener {
+            viewModel.onEvent(CourierDeliveryMapEvent.NavigateToChat)
+        }
     }
 
     override fun setUpObservers() {

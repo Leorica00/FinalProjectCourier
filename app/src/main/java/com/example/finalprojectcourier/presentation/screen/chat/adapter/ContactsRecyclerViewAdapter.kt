@@ -9,12 +9,9 @@ import com.example.final_project.presentation.extension.loadImage
 import com.example.final_project.presentation.model.chat.Contact
 import com.example.finalprojectcourier.databinding.ContactRecyclerItemBinding
 
-class ContactsRecyclerViewAdapter: ListAdapter<Contact, ContactsRecyclerViewAdapter.ContactViewHolder>(
-    ContactItemDiffCallback
-) {
-
+class ContactsRecyclerViewAdapter: ListAdapter<Contact, ContactsRecyclerViewAdapter.ContactViewHolder>(ContactItemDiffCallback) {
     var onHumanContactClick: ((Contact) -> Unit)? = null
-    var onChatbotContactClick: ((Contact) -> Unit)? = null
+    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         return ContactViewHolder(ContactRecyclerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
@@ -30,18 +27,11 @@ class ContactsRecyclerViewAdapter: ListAdapter<Contact, ContactsRecyclerViewAdap
                 contact.imageUrl?.let {
                     shapeableImageViewCover.loadImage(it)
                 }
+
                 tvFullName.text = contact.fullName
-
-                if (adapterPosition == 0) {
-                    root.setOnClickListener {
-                        onChatbotContactClick?.invoke(contact)
-                    }
-                }else {
-                    root.setOnClickListener {
-                        onHumanContactClick?.invoke(contact)
-                    }
+                root.setOnClickListener {
+                    onHumanContactClick?.invoke(contact)
                 }
-
             }
         }
     }
