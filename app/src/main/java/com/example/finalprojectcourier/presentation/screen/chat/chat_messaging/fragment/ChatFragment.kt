@@ -14,7 +14,6 @@ import com.example.finalprojectcourier.presentation.screen.chat.adapter.MessageR
 import com.example.finalprojectcourier.presentation.screen.chat.chat_messaging.viewmodel.ChatViewModel
 import com.example.final_project.presentation.state.ChatState
 import com.example.finalprojectcourier.databinding.FragmentChatBinding
-import com.example.finalprojectcourier.presentation.extension.hideKeyboard
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -77,7 +76,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             val message = Message(Random.nextLong(1, Long.MAX_VALUE), binding.messageBox.text.toString(), FirebaseAuth.getInstance().currentUser?.uid)
             viewModel.onEvent(ChatEvent.AddMessageEvent(message, receiverId))
             binding.messageBox.text?.clear()
-            view?.let { activity?.hideKeyboard(it) }
+
         }
     }
 }
