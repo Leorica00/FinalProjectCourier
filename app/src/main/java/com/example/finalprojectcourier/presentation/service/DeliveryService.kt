@@ -105,7 +105,7 @@ class DeliveryService : Service() {
         if (locationPermissionGranted) {
             locationManager.requestLocationUpdates(
                 LocationManager.FUSED_PROVIDER,
-                5000,
+                1000,
                 0f,
                 locationListener
             )

@@ -7,5 +7,6 @@
         <item name="colorContainer">@color/dark_grey</item>
         <item name="colorSecondary">@color/white</item>
         <item name="strokeColor">@color/grey</item>
+        <item name="android:statusBarColor">@color/gradient_start_color</item>
     </style>
 </resources>
