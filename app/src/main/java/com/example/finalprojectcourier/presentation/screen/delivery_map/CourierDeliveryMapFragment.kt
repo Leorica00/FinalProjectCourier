@@ -2,7 +2,6 @@ package com.example.finalprojectcourier.presentation.screen.delivery_map
 
 import android.content.Intent
 import android.graphics.Color
-import android.util.Log.d
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -53,7 +52,6 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
             val deliveryService = Intent(context, DeliveryService::class.java)
             requireActivity().stopService(deliveryService)
             viewModel.onEvent(CourierDeliveryMapEvent.UpdateCourierLocationEvent)
-            findNavController().navigateUp()
         }
 
         binding.fabChat.setOnClickListener {
@@ -82,6 +80,7 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
     private fun handleNavigation(event: DeliveryMapUiEvent) {
         when (event) {
             is DeliveryMapUiEvent.GoToChatFragment -> findNavController().navigate(CourierDeliveryMapFragmentDirections.actionCourierDeliveryMapFragmentToChatContactsFragment())
+            is DeliveryMapUiEvent.GoBackEvent -> findNavController().navigateUp()
         }
     }
 
@@ -101,7 +100,6 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
             with(binding) {
                 order.isActive?.let { active ->
                     state.direction?.let {
-                        d("OrderBro", order.toString())
                         map.isVisible = active
                         progressBar.isVisible = !active
                         tvLookingForOrder.isVisible = !active
@@ -112,8 +110,8 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
         }
 
         state.distance?.let {
-            binding.tvDistanceLeft.text = "Distance left - ".plus(it.distance)
-            binding.btnOrderDelivered.isVisible = it.distanceValue < 50
+            "Distance left - ".plus(it.distance).also { binding.tvDistanceLeft.text = it }
+            binding.btnOrderDelivered.isVisible = it.distanceValue < 100
         }
     }
 

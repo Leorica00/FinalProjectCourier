@@ -1,5 +1,6 @@
 package com.example.finalprojectcourier.data.repository.remote.order
 
+import android.util.Log.d
 import com.example.final_project.data.remote.common.HandleErrorStates
 import com.example.final_project.data.remote.common.Resource
 import com.example.finalprojectcourier.data.remote.mapper.order.toData
@@ -11,7 +12,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -50,6 +50,7 @@ class OrderRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateOrder(order: GetSubmitOrder): Unit = withContext(IO) {
+        d("updateOrder", order.toString())
         val orderRef = databaseReference.child("orders").child("0")
         orderRef.setValue(order.toData().copy(active = false)).await()
     }
