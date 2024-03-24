@@ -1,6 +1,5 @@
 package com.example.finalprojectcourier.data.repository.remote.order
 
-import android.util.Log.d
 import com.example.final_project.data.remote.common.HandleErrorStates
 import com.example.final_project.data.remote.common.Resource
 import com.example.finalprojectcourier.data.remote.mapper.order.toDomain
@@ -30,10 +29,8 @@ class OrderRepositoryImpl @Inject constructor(
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val order = mutableListOf<SubmitOrderDto>()
                     snapshot.children.forEach {
-                        d("WTFBTOLIKEWTF1", it.toString())
                         order.add(it.getValue(SubmitOrderDto::class.java)!!)
                     }
-                    d("WTFBTOLIKEWTF1", order.toString())
 
                     trySend(Resource.Success(response = order.map { it.toDomain() }.first()))
                 }

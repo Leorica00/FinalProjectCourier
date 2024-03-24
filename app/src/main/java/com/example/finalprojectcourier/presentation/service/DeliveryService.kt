@@ -15,12 +15,11 @@ import android.location.LocationManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavDeepLinkBuilder
 import com.example.finalprojectcourier.R
-import com.google.android.gms.maps.model.LatLng
+import com.example.finalprojectcourier.presentation.model.location.LocationDelivery
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -29,9 +28,11 @@ class DeliveryService : Service() {
     private val locationManager: LocationManager by lazy {
         getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
+
     private val databaseReference: DatabaseReference by lazy {
-        FirebaseDatabase.getInstance().getReference("deliveries/$deliveryId")
+        FirebaseDatabase.getInstance().getReference("deliveries/$deliveryId/0")
     }
+
     private val handler = Handler(Looper.getMainLooper())
     private val notificationChannelId = "delivery_channel"
     private val notificationId = 1
@@ -100,10 +101,9 @@ class DeliveryService : Service() {
         ) == PackageManager.PERMISSION_GRANTED
 
         if (locationPermissionGranted) {
-            Log.d("shevida", "shevida")
             locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
-                5000,
+                10000,
                 0f,
                 locationListener
             )
@@ -113,12 +113,11 @@ class DeliveryService : Service() {
     }
 
     private val locationListener = LocationListener { location ->
-
-        val locationData = LatLng(
+        val locationData = LocationDelivery(
+            true,
             location.latitude,
             location.longitude
         )
-        Log.d("shevida", "$locationData")
         databaseReference.setValue(locationData)
     }
 

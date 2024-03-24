@@ -9,6 +9,7 @@ import com.example.finalprojectcourier.data.remote.service.DirectionsApiService
 import com.example.final_project.presentation.util.EncryptionHelper
 import com.example.finalprojectcourier.BuildConfig
 import com.example.finalprojectcourier.data.local.datasource.ChatBotAuthTokenDataSource
+import com.example.finalprojectcourier.data.remote.service.GoogleDistanceMatrixApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -54,6 +55,12 @@ object AppModule {
     @Singleton
     fun provideMoshi(): Moshi {
         return Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDistanceMatrixApiService(@GoogleMapRetrofit retrofit: Retrofit): GoogleDistanceMatrixApiService {
+        return retrofit.create(GoogleDistanceMatrixApiService::class.java)
     }
 
     @Provides

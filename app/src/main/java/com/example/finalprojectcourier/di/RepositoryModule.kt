@@ -27,8 +27,13 @@ import com.example.final_project.domain.repository.firebase.FirebasePhotosReposi
 import com.example.final_project.domain.repository.firebase.FirebaseUserDataRepository
 import com.example.final_project.domain.repository.route.DirectionsRepository
 import com.example.finalprojectcourier.data.local.datasource.ChatBotAuthTokenDataSource
+import com.example.finalprojectcourier.data.remote.service.GoogleDistanceMatrixApiService
 import com.example.finalprojectcourier.data.repository.remote.chatbot.ChatBotRepositoryImpl
+import com.example.finalprojectcourier.data.repository.remote.distance.DistanceRepositoryImpl
+import com.example.finalprojectcourier.data.repository.remote.location.LocationDeliveryRepositoryImpl
 import com.example.finalprojectcourier.data.repository.remote.order.OrderRepositoryImpl
+import com.example.finalprojectcourier.domain.repository.distance.DistanceRepository
+import com.example.finalprojectcourier.domain.repository.location.LocationDeliveryRepository
 import com.example.finalprojectcourier.domain.repository.order.OrderRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -52,6 +57,16 @@ object RepositoryModule {
     @Singleton
     fun provideDirectionsRepository(directionsApiService: DirectionsApiService, @IoDispatcher ioDispatcher: CoroutineDispatcher): DirectionsRepository =
         DirectionsRepositoryImpl(directionsApiService, ioDispatcher )
+
+    @Provides
+    @Singleton
+    fun provideDistanceRepository(distanceMatrixApiService: GoogleDistanceMatrixApiService, @IoDispatcher ioDispatcher: CoroutineDispatcher): DistanceRepository =
+        DistanceRepositoryImpl(distanceMatrixApiService, ioDispatcher)
+
+    @Provides
+    @Singleton
+    fun provideLocationDeliveryRepository(databaseReference: DatabaseReference, @IoDispatcher ioDispatcher: CoroutineDispatcher): LocationDeliveryRepository =
+        LocationDeliveryRepositoryImpl(databaseReference, ioDispatcher)
 
     @Provides
     @Singleton

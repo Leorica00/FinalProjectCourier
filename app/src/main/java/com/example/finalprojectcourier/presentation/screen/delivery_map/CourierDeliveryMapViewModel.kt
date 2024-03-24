@@ -3,26 +3,25 @@ package com.example.finalprojectcourier.presentation.screen.delivery_map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.final_project.data.remote.common.Resource
+import com.example.final_project.domain.usecase.distance.GetDistanceAndDurationUseCase
+import com.example.finalprojectcourier.domain.usecase.location.GetCourierLocationUpdateUseCase
 import com.example.final_project.presentation.mapper.chat.toDomain
+import com.example.finalprojectcourier.presentation.mapper.location.toPresentation
 import com.example.final_project.presentation.model.chat.Contact
 import com.example.finalprojectcourier.domain.usecase.route.GetDirectionUseCase
 import com.example.finalprojectcourier.presentation.state.CourierDeliveryState
 import com.example.finalprojectcourier.domain.usecase.chat.AddContactUseCase
+import com.example.finalprojectcourier.domain.usecase.location.UpdateCourierLocationUseCase
 import com.example.finalprojectcourier.domain.usecase.order.GetOrderUseCase
-import com.example.finalprojectcourier.presentation.event.delivery_map.ChatDeliveryEvents
+import com.example.finalprojectcourier.presentation.event.delivery.CourierDeliveryMapEvent
+import com.example.finalprojectcourier.presentation.mapper.distance.toPresentation
+import com.example.finalprojectcourier.presentation.mapper.location.toDomain
 import com.example.finalprojectcourier.presentation.mapper.order.toPresentation
 import com.example.finalprojectcourier.presentation.mapper.toPresentation
 import com.example.finalprojectcourier.presentation.util.getErrorMessage
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.Firebase
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.database
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,28 +31,23 @@ import javax.inject.Inject
 class CourierDeliveryMapViewModel @Inject constructor(
     private val getDirectionUseCase: GetDirectionUseCase,
     private val getOrderUseCase: GetOrderUseCase,
-    private val addContactUseCase: AddContactUseCase
+    private val addContactUseCase: AddContactUseCase,
+    private val getDistanceAndDurationUseCase: GetDistanceAndDurationUseCase,
+    private val getCourierLocationUpdateUseCase: GetCourierLocationUpdateUseCase,
+    private val updateCourierLocationUseCase: UpdateCourierLocationUseCase
 ) : ViewModel() {
     private val _directionsStateFlow = MutableStateFlow(CourierDeliveryState())
     val directionStateFlow = _directionsStateFlow.asStateFlow()
 
-    private val _uiEvent = MutableSharedFlow<DeliveryMapUiEvents>()
-    val uiEvent = _uiEvent.asSharedFlow()
-
-    fun onEvent(event: DeliveryMapUiEvents) {
-        when (event) {
-            is DeliveryMapUiEvents.GoToChatFragment -> navigateToChatFragment()
+    fun onEvent(event: CourierDeliveryMapEvent) {
+        when(event) {
+            is CourierDeliveryMapEvent.GetMenuUpdateEvent -> getMenuUpdate()
+            is CourierDeliveryMapEvent.UpdateCourierLocationEvent -> updateCourierLocation()
         }
     }
 
     init {
         getLocationUpdate()
-    }
-
-    private fun navigateToChatFragment() {
-        viewModelScope.launch {
-            _uiEvent.emit(DeliveryMapUiEvents.GoToChatFragment)
-        }
     }
 
     private fun getDirection(origin: LatLng, destination: LatLng) {
@@ -68,11 +62,25 @@ class CourierDeliveryMapViewModel @Inject constructor(
         }
     }
 
+    private fun updateDistanceAndDuration(destination: LatLng, origin: LatLng) {
+        viewModelScope.launch {
+            getDistanceAndDurationUseCase(destination, origin).collect { resource ->
+                when (resource) {
+                    is Resource.Success -> _directionsStateFlow.update { currentState ->
+                        currentState.copy(distance = resource.response.toPresentation()) }
+
+                    is Resource.Error -> updateErrorMessage(getErrorMessage(resource.error))
+                    else -> {}
+                }
+            }
+        }
+    }
+
     private fun updateErrorMessage(errorMessage: Int?) {
         _directionsStateFlow.update { currentState -> currentState.copy(errorMessage = errorMessage) }
     }
 
-    fun getMenuUpdate() {
+    private fun getMenuUpdate() {
         viewModelScope.launch {
             getOrderUseCase().collect {resource ->
                 when(resource) {
@@ -91,23 +99,28 @@ class CourierDeliveryMapViewModel @Inject constructor(
     }
 
     private fun getLocationUpdate() {
-        Firebase.database.reference.child("deliveries").child("your_delivery_id")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val location = mutableMapOf<String?, Double?>()
-                    snapshot.children.forEach {
-                        location[it.key] = it.getValue(Double::class.java)
+        viewModelScope.launch {
+            getCourierLocationUpdateUseCase().collect {resource ->
+                when(resource) {
+                    is Resource.Success -> {
+                        _directionsStateFlow.value.order?.let {
+                            _directionsStateFlow.update { currentState -> currentState.copy(currentLocation = resource.response.toPresentation()) }
+                            updateDistanceAndDuration(it.location!!.location, LatLng(resource.response.latitude, resource.response.longitude))
+                            getDirection(origin = it.location.location, LatLng(resource.response.latitude, resource.response.longitude))
+                        }
                     }
-
-                    _directionsStateFlow.value.order?.let {
-                        getDirection(origin = it.location!!.location, LatLng(location["latitude"]!!, location["longitude"]!!))
-                    }
+                    is Resource.Error -> updateErrorMessage(getErrorMessage(resource.error))
+                    else -> {}
                 }
-                override fun onCancelled(error: DatabaseError) {}
-            })
+            }
+        }
     }
-}
 
-sealed interface DeliveryMapUiEvents {
-    object GoToChatFragment : DeliveryMapUiEvents
+    private fun updateCourierLocation() {
+        viewModelScope.launch {
+            _directionsStateFlow.value.currentLocation?.let {
+                updateCourierLocationUseCase(it.copy(isActive = false).toDomain())
+            }
+        }
+    }
 }
