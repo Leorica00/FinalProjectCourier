@@ -2,6 +2,7 @@ package com.example.finalprojectcourier.presentation.screen.delivery_map
 
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log.d
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -96,10 +97,11 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
             mMap?.addPolyline(polylineOptions)
         }
 
-        state.order?.let {
+        state.order?.let {order ->
             with(binding) {
-                it.isActive?.let { active ->
+                order.isActive?.let { active ->
                     state.direction?.let {
+                        d("OrderBro", order.toString())
                         map.isVisible = active
                         progressBar.isVisible = !active
                         tvLookingForOrder.isVisible = !active
