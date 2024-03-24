@@ -2,6 +2,7 @@ package com.example.finalprojectcourier.presentation.screen.delivery_map
 
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -29,10 +30,11 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
     private val viewModel: CourierDeliveryMapViewModel by viewModels()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var mMap: GoogleMap? = null
+    private var refreshCounter = 0
 
     private val callback = OnMapReadyCallback { googleMap ->
         mMap = googleMap
-        updateLocationUi(LatLng(41.7934135, 44.8025545))
+
     }
 
     override fun setUp() {
@@ -112,6 +114,13 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
         state.distance?.let {
             "Distance left - ".plus(it.distance).also { binding.tvDistanceLeft.text = it }
             binding.btnOrderDelivered.isVisible = it.distanceValue < 100
+        }
+
+        state.order?.let {
+            if (refreshCounter < 1) {
+                updateLocationUi(it.location!!.location)
+                refreshCounter++
+            }
         }
     }
 
