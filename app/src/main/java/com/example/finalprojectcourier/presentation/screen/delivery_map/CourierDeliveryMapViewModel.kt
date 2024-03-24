@@ -134,10 +134,11 @@ class CourierDeliveryMapViewModel @Inject constructor(
     private fun updateCourierLocation() {
         viewModelScope.launch {
             _directionsStateFlow.value.currentLocation?.let {
-                updateCourierLocationUseCase(it.copy(isActive = false).toDomain())
                 _directionsStateFlow.value.order?.let {
                     updateOrderUseCase(it.toDomain())
                 }
+                updateCourierLocationUseCase(it.copy(isActive = false).toDomain())
+                _uiEvent.emit(DeliveryMapUiEvent.GoBackEvent)
             }
         }
     }
@@ -145,4 +146,5 @@ class CourierDeliveryMapViewModel @Inject constructor(
 
 sealed interface DeliveryMapUiEvent {
     object GoToChatFragment : DeliveryMapUiEvent
+    object GoBackEvent: DeliveryMapUiEvent
 }
