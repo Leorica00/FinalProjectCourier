@@ -9,6 +9,7 @@ import com.example.finalprojectcourier.domain.usecase.route.GetDirectionUseCase
 import com.example.finalprojectcourier.presentation.state.CourierDeliveryState
 import com.example.finalprojectcourier.domain.usecase.chat.AddContactUseCase
 import com.example.finalprojectcourier.domain.usecase.order.GetOrderUseCase
+import com.example.finalprojectcourier.presentation.event.delivery_map.ChatDeliveryEvents
 import com.example.finalprojectcourier.presentation.mapper.order.toPresentation
 import com.example.finalprojectcourier.presentation.mapper.toPresentation
 import com.example.finalprojectcourier.presentation.util.getErrorMessage
@@ -19,7 +20,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,8 +37,23 @@ class CourierDeliveryMapViewModel @Inject constructor(
     private val _directionsStateFlow = MutableStateFlow(CourierDeliveryState())
     val directionStateFlow = _directionsStateFlow.asStateFlow()
 
+    private val _uiEvent = MutableSharedFlow<DeliveryMapUiEvents>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
+    fun onEvent(event: DeliveryMapUiEvents) {
+        when (event) {
+            is DeliveryMapUiEvents.GoToChatFragment -> navigateToChatFragment()
+        }
+    }
+
     init {
         getLocationUpdate()
+    }
+
+    private fun navigateToChatFragment() {
+        viewModelScope.launch {
+            _uiEvent.emit(DeliveryMapUiEvents.GoToChatFragment)
+        }
     }
 
     private fun getDirection(origin: LatLng, destination: LatLng) {
@@ -88,4 +106,8 @@ class CourierDeliveryMapViewModel @Inject constructor(
                 override fun onCancelled(error: DatabaseError) {}
             })
     }
+}
+
+sealed interface DeliveryMapUiEvents {
+    object GoToChatFragment : DeliveryMapUiEvents
 }

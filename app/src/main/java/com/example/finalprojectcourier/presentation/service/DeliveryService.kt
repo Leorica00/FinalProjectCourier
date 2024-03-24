@@ -15,6 +15,7 @@ import android.location.LocationManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavDeepLinkBuilder
@@ -99,9 +100,10 @@ class DeliveryService : Service() {
         ) == PackageManager.PERMISSION_GRANTED
 
         if (locationPermissionGranted) {
+            Log.d("shevida", "shevida")
             locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                10000,
+                LocationManager.NETWORK_PROVIDER,
+                5000,
                 0f,
                 locationListener
             )
@@ -111,10 +113,12 @@ class DeliveryService : Service() {
     }
 
     private val locationListener = LocationListener { location ->
+
         val locationData = LatLng(
             location.latitude,
             location.longitude
         )
+        Log.d("shevida", "$locationData")
         databaseReference.setValue(locationData)
     }
 

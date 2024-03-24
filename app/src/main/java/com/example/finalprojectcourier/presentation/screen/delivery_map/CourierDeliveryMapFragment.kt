@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.finalprojectcourier.presentation.base.BaseFragment
 import com.example.finalprojectcourier.presentation.service.DeliveryService
 import com.example.finalprojectcourier.databinding.FragmentCourierDeliveryMapBinding
@@ -25,11 +26,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBinding>(FragmentCourierDeliveryMapBinding::inflate)  {
-
     private val viewModel: CourierDeliveryMapViewModel by viewModels()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var mMap: GoogleMap? = null
-
 
     private val callback = OnMapReadyCallback { googleMap ->
         mMap = googleMap
@@ -45,18 +44,37 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
         val serviceIntent = Intent(requireActivity(), DeliveryService::class.java)
         serviceIntent.putExtra("deliveryId", deliveryId)
         requireActivity().startForegroundService(serviceIntent)
+
         viewModel.getMenuUpdate()
     }
 
-    override fun setUpListeners() {}
+    override fun setUpListeners() {
+        binding.fabChat.setOnClickListener {
+            viewModel.onEvent(DeliveryMapUiEvents.GoToChatFragment)
+        }
+    }
 
     override fun setUpObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.directionStateFlow.collect {
-                    handleState(it)
+                launch {
+                    viewModel.directionStateFlow.collect {
+                        handleState(it)
+                    }
+                }
+
+                launch {
+                    viewModel.uiEvent.collect {
+                        handleNavigationEvents(it)
+                    }
                 }
             }
+        }
+    }
+
+    private fun handleNavigationEvents(event: DeliveryMapUiEvents) {
+        when (event) {
+            is DeliveryMapUiEvents.GoToChatFragment -> findNavController().navigate(CourierDeliveryMapFragmentDirections.actionCourierDeliveryMapFragmentToChatContactsFragment())
         }
     }
 
@@ -71,6 +89,7 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
             mMap?.clear()
             mMap?.addPolyline(polylineOptions)
         }
+
         state.order?.let {
             with(binding) {
                 it.isActive?.let { active ->

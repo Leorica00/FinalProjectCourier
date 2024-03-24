@@ -8,7 +8,11 @@
         android:id="@+id/courierDeliveryMapFragment"
         android:name="com.example.finalprojectcourier.presentation.screen.delivery_map.CourierDeliveryMapFragment"
         android:label="fragment_courier_delivery_map"
-        tools:layout="@layout/fragment_courier_delivery_map" />
+        tools:layout="@layout/fragment_courier_delivery_map" >
+        <action
+            android:id="@+id/action_courierDeliveryMapFragment_to_chatContactsFragment"
+            app:destination="@id/chatContactsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.finalprojectcourier.presentation.screen.home.HomeFragment"
@@ -18,4 +22,9 @@
             android:id="@+id/action_homeFragment_to_courierDeliveryMapFragment"
             app:destination="@id/courierDeliveryMapFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/chatContactsFragment"
+        android:name="com.example.finalprojectcourier.presentation.screen.chat.chat_contacts.ChatContactsFragment"
+        android:label="fragment_chat_contacts"
+        tools:layout="@layout/fragment_chat_contacts" />
 </navigation>

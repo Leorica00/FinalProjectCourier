@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.finalprojectcourier.presentation.base.BaseFragment
@@ -13,6 +14,8 @@ import com.example.final_project.presentation.event.EmailPasswordEvents
 import com.example.finalprojectcourier.presentation.screen.password.viewmodel.EmailPasswordUiEvents
 import com.example.finalprojectcourier.presentation.screen.password.viewmodel.PasswordViewModel
 import com.example.final_project.presentation.state.LoginState
+import com.example.finalprojectcourier.NavGraphDirections
+import com.example.finalprojectcourier.R
 import com.example.finalprojectcourier.databinding.FragmentPasswordBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -64,7 +67,9 @@ class PasswordFragment : BaseFragment<FragmentPasswordBinding>(FragmentPasswordB
 
     private fun handleNavigation(event: EmailPasswordUiEvents) {
         when (event) {
-            is EmailPasswordUiEvents.NavigateToHomeFragment -> findNavController().navigate(PasswordFragmentDirections.actionPasswordFragmentToPlaceholderDestination())
+            is EmailPasswordUiEvents.NavigateToHomeFragment ->
+                requireActivity().findNavController(R.id.nav_host_fragment).navigate(
+                    NavGraphDirections.actionGlobalToHomeFragment())
         }
     }
 }
