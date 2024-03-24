@@ -7,5 +7,6 @@ data class GetSubmitOrder(
     val isActive: Boolean?,
     val location: GetDeliveryLocation?,
     val menu: List<GetOrder>?,
-    val totalPrice: Double?
+    val totalPrice: Double?,
+    val fullName: String?
 )
