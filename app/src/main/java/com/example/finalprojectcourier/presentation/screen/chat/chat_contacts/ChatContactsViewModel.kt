@@ -22,13 +22,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatContactsViewModel @Inject constructor(private val getContactsUseCase: GetContactsUseCase, private val addContactUseCase: AddContactUseCase): ViewModel() {
-    private val chatBotContact = Contact(
-        imageUrl = "https://image.shutterstock.com/image-vector/robot-icon-chatbot-cute-smiling-260nw-715418284.jpg",
-        lastMessage = null,
-        receiverId =  UUID.randomUUID().toString(),
-        fullName = "Chat Bot"
-    )
-
     private val _contactsStateFlow = MutableStateFlow(ContactsState())
     val contactsStateFlow = _contactsStateFlow.asStateFlow()
 
@@ -46,7 +39,7 @@ class ChatContactsViewModel @Inject constructor(private val getContactsUseCase: 
                 when(resource) {
                     is Resource.Loading -> _contactsStateFlow.update { currentState -> currentState.copy(isLoading = resource.loading) }
                     is Resource.Success -> {
-                        val currentList = mutableListOf(chatBotContact)
+                        val currentList = mutableListOf<Contact>()
                         currentList.addAll(resource.response.map { it.toPresentation() })
                         _contactsStateFlow.update {currentState -> currentState.copy(contacts = currentList)
                         }
