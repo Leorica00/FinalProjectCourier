@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,18 +17,47 @@
         android:id="@+id/progressBar"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_gravity="center"
         android:layout_marginBottom="50dp"
         android:indeterminateTint="@color/gradient_end_color"
-        android:progressTint="@color/gradient_start_color"
-        android:layout_gravity="center"/>
+        android:progressTint="@color/gradient_start_color" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvLookingForOrder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/looking_for_an_order"
         android:layout_gravity="center"
+        android:text="@string/looking_for_an_order"
         android:textColor="?android:textColor"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnOrderDelivered"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/button_background"
+        android:text="@string/order_delivered"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvDistanceLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Distance left - 500m"
+        android:background="@drawable/button_background"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="5dp"/>
 </FrameLayout>
