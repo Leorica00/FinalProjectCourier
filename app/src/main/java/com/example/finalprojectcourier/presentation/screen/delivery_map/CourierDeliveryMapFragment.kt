@@ -29,10 +29,10 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
     private val viewModel: CourierDeliveryMapViewModel by viewModels()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var mMap: GoogleMap? = null
-    private var refreshCount = 0
 
     private val callback = OnMapReadyCallback { googleMap ->
         mMap = googleMap
+        updateLocationUi(LatLng(41.7934135, 44.8025545))
     }
 
     override fun setUp() {
@@ -52,7 +52,6 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
             val deliveryService = Intent(context, DeliveryService::class.java)
             requireActivity().stopService(deliveryService)
             viewModel.onEvent(CourierDeliveryMapEvent.UpdateCourierLocationEvent)
-            findNavController().navigateUp()
         }
 
         binding.fabChat.setOnClickListener {
@@ -81,6 +80,7 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
     private fun handleNavigation(event: DeliveryMapUiEvent) {
         when (event) {
             is DeliveryMapUiEvent.GoToChatFragment -> findNavController().navigate(CourierDeliveryMapFragmentDirections.actionCourierDeliveryMapFragmentToChatContactsFragment())
+            is DeliveryMapUiEvent.GoBackEvent -> findNavController().navigateUp()
         }
     }
 
@@ -96,14 +96,9 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
             mMap?.addPolyline(polylineOptions)
         }
 
-        state.order?.let {
+        state.order?.let {order ->
             with(binding) {
-                if (refreshCount < 1) {
-                    updateLocationUi(it.location!!.location)
-                    refreshCount++
-                }
-
-                it.isActive?.let { active ->
+                order.isActive?.let { active ->
                     state.direction?.let {
                         map.isVisible = active
                         progressBar.isVisible = !active
@@ -115,8 +110,8 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
         }
 
         state.distance?.let {
-            binding.tvDistanceLeft.text = "Distance left - ".plus(it.distance)
-            binding.btnOrderDelivered.isVisible = it.distanceValue < 50
+            "Distance left - ".plus(it.distance).also { binding.tvDistanceLeft.text = it }
+            binding.btnOrderDelivered.isVisible = it.distanceValue < 100
         }
     }
 

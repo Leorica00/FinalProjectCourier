@@ -42,6 +42,8 @@
         android:id="@+id/charRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingBottom="20dp"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@+id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

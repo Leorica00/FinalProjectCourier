@@ -13,9 +13,11 @@ import com.example.finalprojectcourier.presentation.state.CourierDeliveryState
 import com.example.finalprojectcourier.domain.usecase.chat.AddContactUseCase
 import com.example.finalprojectcourier.domain.usecase.location.UpdateCourierLocationUseCase
 import com.example.finalprojectcourier.domain.usecase.order.GetOrderUseCase
+import com.example.finalprojectcourier.domain.usecase.order.UpdateOrderUseCase
 import com.example.finalprojectcourier.presentation.event.delivery.CourierDeliveryMapEvent
 import com.example.finalprojectcourier.presentation.mapper.distance.toPresentation
 import com.example.finalprojectcourier.presentation.mapper.location.toDomain
+import com.example.finalprojectcourier.presentation.mapper.order.toDomain
 import com.example.finalprojectcourier.presentation.mapper.order.toPresentation
 import com.example.finalprojectcourier.presentation.mapper.toPresentation
 import com.example.finalprojectcourier.presentation.util.getErrorMessage
@@ -36,7 +38,8 @@ class CourierDeliveryMapViewModel @Inject constructor(
     private val addContactUseCase: AddContactUseCase,
     private val getDistanceAndDurationUseCase: GetDistanceAndDurationUseCase,
     private val getCourierLocationUpdateUseCase: GetCourierLocationUpdateUseCase,
-    private val updateCourierLocationUseCase: UpdateCourierLocationUseCase
+    private val updateCourierLocationUseCase: UpdateCourierLocationUseCase,
+    private val updateOrderUseCase: UpdateOrderUseCase
 ) : ViewModel() {
     private val _directionsStateFlow = MutableStateFlow(CourierDeliveryState())
     val directionStateFlow = _directionsStateFlow.asStateFlow()
@@ -131,7 +134,11 @@ class CourierDeliveryMapViewModel @Inject constructor(
     private fun updateCourierLocation() {
         viewModelScope.launch {
             _directionsStateFlow.value.currentLocation?.let {
+                _directionsStateFlow.value.order?.let {
+                    updateOrderUseCase(it.toDomain())
+                }
                 updateCourierLocationUseCase(it.copy(isActive = false).toDomain())
+                _uiEvent.emit(DeliveryMapUiEvent.GoBackEvent)
             }
         }
     }
@@ -139,4 +146,5 @@ class CourierDeliveryMapViewModel @Inject constructor(
 
 sealed interface DeliveryMapUiEvent {
     object GoToChatFragment : DeliveryMapUiEvent
+    object GoBackEvent: DeliveryMapUiEvent
 }
