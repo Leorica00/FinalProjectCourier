@@ -26,11 +26,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBinding>(FragmentCourierDeliveryMapBinding::inflate)  {
-
     private val viewModel: CourierDeliveryMapViewModel by viewModels()
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var mMap: GoogleMap? = null
-
 
     private val callback = OnMapReadyCallback { googleMap ->
         mMap = googleMap
@@ -61,10 +59,24 @@ class CourierDeliveryMapFragment : BaseFragment<FragmentCourierDeliveryMapBindin
     override fun setUpObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.directionStateFlow.collect {
-                    handleState(it)
+                launch {
+                    viewModel.directionStateFlow.collect {
+                        handleState(it)
+                    }
+                }
+
+                launch {
+                    viewModel.uiEvent.collect {
+                        handleNavigation(it)
+                    }
                 }
             }
+        }
+    }
+
+    private fun handleNavigation(event: DeliveryMapUiEvent) {
+        when (event) {
+            is DeliveryMapUiEvent.GoToChatFragment -> findNavController().navigate(CourierDeliveryMapFragmentDirections.actionCourierDeliveryMapFragmentToChatContactsFragment())
         }
     }
 

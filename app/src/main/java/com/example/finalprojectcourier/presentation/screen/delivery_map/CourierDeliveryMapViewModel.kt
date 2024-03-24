@@ -21,7 +21,9 @@ import com.example.finalprojectcourier.presentation.mapper.toPresentation
 import com.example.finalprojectcourier.presentation.util.getErrorMessage
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,15 +41,25 @@ class CourierDeliveryMapViewModel @Inject constructor(
     private val _directionsStateFlow = MutableStateFlow(CourierDeliveryState())
     val directionStateFlow = _directionsStateFlow.asStateFlow()
 
+    private val _uiEvent = MutableSharedFlow<DeliveryMapUiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
     fun onEvent(event: CourierDeliveryMapEvent) {
         when(event) {
             is CourierDeliveryMapEvent.GetMenuUpdateEvent -> getMenuUpdate()
+            is CourierDeliveryMapEvent.NavigateToChat -> navigateToChat()
             is CourierDeliveryMapEvent.UpdateCourierLocationEvent -> updateCourierLocation()
         }
     }
 
     init {
         getLocationUpdate()
+    }
+
+    private fun navigateToChat() {
+        viewModelScope.launch {
+            _uiEvent.emit(DeliveryMapUiEvent.GoToChatFragment)
+        }
     }
 
     private fun getDirection(origin: LatLng, destination: LatLng) {
@@ -123,4 +135,8 @@ class CourierDeliveryMapViewModel @Inject constructor(
             }
         }
     }
+}
+
+sealed interface DeliveryMapUiEvent {
+    object GoToChatFragment : DeliveryMapUiEvent
 }
